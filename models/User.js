@@ -7,6 +7,9 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   hostel: { type: String, required: true },
+  isVerified: { type: Boolean, default: false },
+  verificationOtp: { type: String },
+  verificationOtpExpires: { type: Date },
   resetOtp: { type: String },
   resetOtpExpires: { type: Date },
   createdAt: { type: Date, default: Date.now }
@@ -60,6 +63,9 @@ const User = {
         email: userData.email,
         password: userData.password,
         hostel: userData.hostel,
+        isVerified: userData.isVerified || false,
+        verificationOtp: userData.verificationOtp || null,
+        verificationOtpExpires: userData.verificationOtpExpires || null,
         createdAt: new Date()
       };
       db.users.push(newUser);

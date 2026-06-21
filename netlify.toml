@@ -1,0 +1,10 @@
+# Netlify configuration for CampusXchange frontend deployment
+
+[build]
+  publish = "public"
+
+# Redirect all paths to index.html for Single-Page Application (SPA) client-side routing
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
