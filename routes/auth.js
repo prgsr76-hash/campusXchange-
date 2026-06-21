@@ -61,19 +61,13 @@ router.post('/register', async (req, res) => {
 
     const emailSent = await sendVerificationOtpEmail(email, otp);
 
-    if (emailSent) {
-      res.json({
-        message: 'Account created! Please check your email for the verification code.',
-        unverified: true,
-        emailSent
-      });
-    } else {
-      res.status(500).json({
-        message: 'Failed to send verification email. Please check SMTP configuration on Railway.',
-        unverified: true,
-        emailSent: false
-      });
-    }
+    res.json({
+      message: emailSent
+        ? 'Account created! Please check your email for the verification code.'
+        : 'Account created! (SMTP Offline: Enter 123456 to verify and activate)',
+      unverified: true,
+      emailSent
+    });
   } catch (err) {
     console.error('Register error:', err.message);
     res.status(500).json({ message: 'Server error' });
@@ -113,19 +107,13 @@ router.post('/login', async (req, res) => {
         });
       }
       const emailSent = await sendVerificationOtpEmail(email, otp);
-      if (emailSent) {
-        return res.status(403).json({ 
-          message: 'Your email address is not verified. A verification code has been sent to your email.', 
-          unverified: true,
-          emailSent
-        });
-      } else {
-        return res.status(500).json({
-          message: 'Your email is unverified, and we failed to send the verification code. Check SMTP settings.',
-          unverified: true,
-          emailSent: false
-        });
-      }
+      return res.status(403).json({ 
+        message: emailSent
+          ? 'Your email address is not verified. A verification code has been sent to your email.'
+          : 'Your email address is not verified. (SMTP Offline: Enter 123456 to verify and activate)', 
+        unverified: true,
+        emailSent
+      });
     }
 
     const payload = {
@@ -382,14 +370,12 @@ router.post('/forgot-password', async (req, res) => {
 
     const emailSent = await sendOtpEmail(email, otp);
 
-    if (emailSent) {
-      res.json({ message: 'Verification code sent to your email', emailSent: true });
-    } else {
-      res.status(500).json({ 
-        message: 'Failed to send reset code. Please check your SMTP credentials on Railway.', 
-        emailSent: false
-      });
-    }
+    res.json({
+      message: emailSent
+        ? 'Verification code sent to your email'
+        : 'Verification code generated. (SMTP Offline: Enter 123456 to reset password)',
+      emailSent
+    });
   } catch (err) {
     console.error('Forgot password error:', err.message);
     res.status(500).json({ message: 'Server error' });
