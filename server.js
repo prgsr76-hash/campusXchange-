@@ -30,7 +30,7 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log(`==================================================`);
-  console.log(`CampusXchange Server running on port ${PORT}`);
+  console.log(`CampusLoop Server running on port ${PORT}`);
   console.log(`Access local application at http://localhost:${PORT}`);
   console.log(`==================================================`);
 });

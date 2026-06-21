@@ -1,5 +1,5 @@
 {
-  "name": "campusxchange",
+  "name": "campusloop",
   "version": "1.0.0",
   "description": "A full-stack student marketplace for college campuses featuring an AJIO-style design.",
   "main": "server.js",
