@@ -38,10 +38,10 @@ const Listing = {
         query.category = filters.category;
       }
       if (filters.transactionType) {
-        query.transactionType = filters.transactionType;
+        query.transactionType = { $in: filters.transactionType.split(',') };
       }
       if (filters.status) {
-        query.status = filters.status;
+        query.status = { $in: filters.status.split(',') };
       }
       if (filters.owner) {
         query.owner = filters.owner;
@@ -59,14 +59,17 @@ const Listing = {
         results = results.filter(l => l.category === filters.category);
       }
       if (filters.transactionType) {
-        results = results.filter(l => l.transactionType === filters.transactionType);
+        const types = filters.transactionType.split(',');
+        results = results.filter(l => types.includes(l.transactionType));
       }
       if (filters.status) {
-        results = results.filter(l => l.status === filters.status);
+        const statuses = filters.status.split(',');
+        results = results.filter(l => statuses.includes(l.status));
       }
       if (filters.owner) {
         results = results.filter(l => l.owner === filters.owner);
       }
+
 
       // Sort by createdAt descending
       results.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
