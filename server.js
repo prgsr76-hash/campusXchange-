@@ -20,6 +20,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/listings', require('./routes/listings'));
 app.use('/api/upload', require('./routes/upload'));
+app.use('/api/messages', require('./routes/messages'));
+
 
 // Fallback to index.html to support single page app routing on page refreshes
 app.get('*', (req, res) => {
