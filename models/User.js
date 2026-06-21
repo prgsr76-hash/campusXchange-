@@ -7,6 +7,8 @@ const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   hostel: { type: String, required: true },
+  resetOtp: { type: String },
+  resetOtpExpires: { type: Date },
   createdAt: { type: Date, default: Date.now }
 });
 
@@ -64,6 +66,25 @@ const User = {
       writeJsonDb(db);
       const { password, ...userWithoutPassword } = newUser;
       return userWithoutPassword;
+    }
+  },
+
+  // Update user fields (for resetting password/OTPs)
+  updateOne: async (id, updateFields) => {
+    if (getDbType() === 'mongodb') {
+      return await MongooseUser.findByIdAndUpdate(id, updateFields, { new: true });
+    } else {
+      const db = readJsonDb();
+      const index = db.users.findIndex(u => u.id === id || u._id === id);
+      if (index === -1) return null;
+      
+      db.users[index] = {
+        ...db.users[index],
+        ...updateFields
+      };
+      
+      writeJsonDb(db);
+      return db.users[index];
     }
   }
 };

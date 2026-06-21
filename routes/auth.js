@@ -128,4 +128,162 @@ router.get('/me', auth, async (req, res) => {
   }
 });
 
+const nodemailer = require('nodemailer');
+
+const sendOtpEmail = async (email, otp) => {
+  const smtpHost = process.env.SMTP_HOST;
+  const smtpPort = process.env.SMTP_PORT || 587;
+  const smtpUser = process.env.SMTP_USER;
+  const smtpPass = process.env.SMTP_PASS;
+
+  if (smtpHost && smtpUser && smtpPass) {
+    try {
+      const transporter = nodemailer.createTransport({
+        host: smtpHost,
+        port: smtpPort,
+        secure: smtpPort == 465,
+        auth: {
+          user: smtpUser,
+          pass: smtpPass
+        }
+      });
+
+      const mailOptions = {
+        from: `"CampusLoop Support" <${smtpUser}>`,
+        to: email,
+        subject: 'CampusLoop - Password Reset Code',
+        text: `Your One-Time Password (OTP) code is: ${otp}. It will expire in 10 minutes.`,
+        html: `
+          <div style="font-family: Arial, sans-serif; padding: 20px; border: 1px solid #ddd; border-radius: 5px; max-width: 500px;">
+            <h2 style="color: #0f172a; border-bottom: 2px solid #0f172a; padding-bottom: 10px;">CAMPUSLOOP</h2>
+            <p>You requested a password reset. Use the One-Time Password (OTP) code below to set a new password:</p>
+            <div style="background-color: #f1f5f9; padding: 15px; text-align: center; border-radius: 5px; margin: 20px 0;">
+              <span style="font-size: 24px; font-weight: bold; letter-spacing: 5px; color: #0f172a;">${otp}</span>
+            </div>
+            <p style="font-size: 12px; color: #64748b;">This OTP code will expire in 10 minutes. If you did not request this, please ignore this email.</p>
+          </div>
+        `
+      };
+
+      await transporter.sendMail(mailOptions);
+      console.log(`OTP email sent successfully to ${email}`);
+      return true;
+    } catch (err) {
+      console.error('Nodemailer SMTP failed to send mail:', err.message);
+      return false;
+    }
+  } else {
+    console.log(`========================================`);
+    console.log(`[SMTP OFFLINE] Password Reset Request:`);
+    console.log(`Email: ${email}`);
+    console.log(`OTP Code: ${otp}`);
+    console.log(`========================================`);
+    return false;
+  }
+};
+
+// @route    POST api/auth/forgot-password
+// @desc     Generate OTP code & send email
+// @access   Public
+router.post('/forgot-password', async (req, res) => {
+  const { email } = req.body;
+  if (!email) {
+    return res.status(400).json({ message: 'Please enter your email' });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(404).json({ message: 'No account found with this email' });
+    }
+
+    const otp = Math.floor(100000 + Math.random() * 900000).toString();
+    const expiry = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+    await User.updateOne(user._id || user.id, {
+      resetOtp: otp,
+      resetOtpExpires: expiry
+    });
+
+    const emailSent = await sendOtpEmail(email, otp);
+
+    if (emailSent) {
+      res.json({ message: 'Verification code sent to your email', emailSent: true });
+    } else {
+      res.json({ 
+        message: 'Verification code generated (SMTP Offline)', 
+        emailSent: false, 
+        debugOtp: otp 
+      });
+    }
+  } catch (err) {
+    console.error('Forgot password error:', err.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
+// @route    POST api/auth/reset-password
+// @desc     Verify OTP code & update password
+// @access   Public
+router.post('/reset-password', async (req, res) => {
+  const { email, otp, newPassword } = req.body;
+
+  if (!email || !otp || !newPassword) {
+    return res.status(400).json({ message: 'Please enter all fields' });
+  }
+
+  try {
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: 'Invalid email or code' });
+    }
+
+    if (!user.resetOtp || user.resetOtp !== otp) {
+      return res.status(400).json({ message: 'Invalid verification code' });
+    }
+
+    if (new Date() > new Date(user.resetOtpExpires)) {
+      return res.status(400).json({ message: 'Verification code has expired' });
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+    await User.updateOne(user._id || user.id, {
+      password: hashedPassword,
+      resetOtp: null,
+      resetOtpExpires: null
+    });
+
+    const payload = {
+      user: {
+        id: user._id
+      }
+    };
+
+    const secret = process.env.JWT_SECRET || 'campusxchange_secret_key_123';
+    jwt.sign(
+      payload,
+      secret,
+      { expiresIn: '7d' },
+      (err, token) => {
+        if (err) throw err;
+        res.json({
+          message: 'Password reset successfully',
+          token,
+          user: {
+            id: user._id,
+            name: user.name,
+            email: user.email,
+            hostel: user.hostel
+          }
+        });
+      }
+    );
+  } catch (err) {
+    console.error('Reset password error:', err.message);
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 module.exports = router;

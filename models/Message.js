@@ -7,6 +7,7 @@ const MessageSchema = new mongoose.Schema({
   receiver: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
   listing: { type: mongoose.Schema.Types.ObjectId, ref: 'Listing', required: true },
   content: { type: String, required: true },
+  read: { type: Boolean, default: false },
   createdAt: { type: Date, default: Date.now }
 });
 
@@ -88,6 +89,7 @@ const Message = {
         receiver: msgData.receiver,
         listing: msgData.listing,
         content: msgData.content,
+        read: false,
         createdAt: new Date()
       };
       
@@ -120,11 +122,21 @@ const Message = {
         const key = `${otherUser._id}-${msg.listing._id}`;
         if (!seenKeys.has(key)) {
           seenKeys.add(key);
+          
+          // Count unread messages in this conversation where current user is receiver
+          const unreadCount = await MongooseMessage.countDocuments({
+            sender: otherUser._id,
+            receiver: userId,
+            listing: msg.listing._id,
+            read: false
+          });
+
           conversations.push({
             otherUser,
             listing: msg.listing,
             lastMessage: msg.content,
-            lastMessageDate: msg.createdAt
+            lastMessageDate: msg.createdAt,
+            unreadCount
           });
         }
       }
@@ -151,15 +163,58 @@ const Message = {
         const key = `${otherUser._id}-${item._id}`;
         if (!seenKeys.has(key)) {
           seenKeys.add(key);
+
+          const unreadCount = db.messages.filter(m =>
+            m.sender === otherUserId &&
+            m.receiver === userId &&
+            m.listing === item._id &&
+            m.read === false
+          ).length;
+
           conversations.push({
             otherUser: { _id: otherUser._id, name: otherUser.name, email: otherUser.email, hostel: otherUser.hostel },
             listing: { _id: item._id, title: item.title, imageUrl: item.imageUrl, price: item.price },
             lastMessage: msg.content,
-            lastMessageDate: msg.createdAt
+            lastMessageDate: msg.createdAt,
+            unreadCount
           });
         }
       }
       return conversations;
+    }
+  },
+
+  // Mark all messages in a thread as read
+  markAsRead: async (userId, senderId, listingId) => {
+    if (getDbType() === 'mongodb') {
+      return await MongooseMessage.updateMany(
+        { receiver: userId, sender: senderId, listing: listingId, read: false },
+        { $set: { read: true } }
+      );
+    } else {
+      const db = readJsonDb();
+      if (!db.messages) db.messages = [];
+      
+      db.messages.forEach(m => {
+        if (m.receiver === userId && m.sender === senderId && m.listing === listingId) {
+          m.read = true;
+        }
+      });
+      
+      writeJsonDb(db);
+      return true;
+    }
+  },
+
+  // Count total unread messages for a user
+  countUnreadTotal: async (userId) => {
+    if (getDbType() === 'mongodb') {
+      return await MongooseMessage.countDocuments({ receiver: userId, read: false });
+    } else {
+      const db = readJsonDb();
+      if (!db.messages) db.messages = [];
+      
+      return db.messages.filter(m => m.receiver === userId && m.read === false).length;
     }
   }
 };
