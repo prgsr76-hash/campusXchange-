@@ -32,6 +32,12 @@ router.post('/', auth, async (req, res) => {
       content
     });
 
+    // Notify receiver room in real-time
+    const io = req.app.get('io');
+    if (io) {
+      io.to(receiver).emit('messageReceived', newMessage);
+    }
+
     res.json(newMessage);
   } catch (err) {
     console.error('Send message error:', err.message);

@@ -4,11 +4,12 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const auth = require('../middleware/auth');
 const { User } = require('../models/User');
+const { otpRateLimiter } = require('../middleware/rateLimiter');
 
 // @route    POST api/auth/register
 // @desc     Register user
 // @access   Public
-router.post('/register', async (req, res) => {
+router.post('/register', otpRateLimiter, async (req, res) => {
   const { name, email, password, hostel } = req.body;
 
   if (!name || !email || !password || !hostel) {
@@ -348,7 +349,7 @@ router.post('/verify-email', async (req, res) => {
 // @route    POST api/auth/forgot-password
 // @desc     Generate OTP code & send email
 // @access   Public
-router.post('/forgot-password', async (req, res) => {
+router.post('/forgot-password', otpRateLimiter, async (req, res) => {
   const { email } = req.body;
   if (!email) {
     return res.status(400).json({ message: 'Please enter your email' });

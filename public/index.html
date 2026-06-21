@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CampusLoop | The Student Marketplace</title>
+  <!-- SEO Meta Tags -->
+  <meta name="description" content="CampusLoop is a trusted peer-to-peer student marketplace. Buy, sell, rent, exchange, and donate textbooks, cycles, electronics, hostel essentials and notes inside your college campus.">
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Core Design Stylesheet -->
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+
+  <!-- TOP HEADER & NAVIGATION -->
+  <header>
+    <div class="navbar">
+      <div class="logo-container" id="nav-logo-btn" style="cursor: pointer;">
+        <span class="logo-text">CampusLoop</span>
+        <span class="logo-dot">.</span>
+      </div>
+
+
+      <!-- Search Bar -->
+      <div class="nav-search-container">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <input type="text" id="global-search-input" placeholder="Search textbooks, calculators, cycles, hostel essentials...">
+      </div>
+
+      <!-- Nav Menu Actions -->
+      <nav class="nav-menu">
+        <span class="nav-link" id="nav-home-btn"><i class="fa-solid fa-house"></i> Home</span>
+        <button class="btn btn-sell" id="nav-sell-btn"><i class="fa-solid fa-plus"></i> Sell / Rent</button>
+        
+        <!-- Guest Menu -->
+        <button class="btn btn-outline" id="nav-login-btn">Log In</button>
+        
+        <!-- Authenticated Profile (Hidden initially) -->
+        <div class="nav-profile" id="nav-profile-dropdown" style="display: none; position: relative;">
+          <div class="avatar" id="nav-user-avatar">U</div>
+          <span class="profile-name" id="nav-user-name">Student</span>
+          <span class="nav-notification-dot" id="nav-unread-dot" style="display: none;"></span>
+          <i class="fa-solid fa-chevron-down" style="font-size: 0.75rem; color: var(--text-secondary);"></i>
+        </div>
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN SPA CONTENTS -->
+  <main id="main-content-area">
+    
+    <!-- ==============================================
+         1. HOMEPAGE VIEW
+         ============================================== -->
+    <section id="view-home">
+      <!-- Hero Carousel Slider (AJIO Style Banners) -->
+      <div class="hero-container">
+        <div class="carousel" id="hero-carousel">
+          
+          <!-- Slide 1: Sell / Buy -->
+          <div class="carousel-slide active" style="background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=1470&auto=format&fit=crop');">
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+              <span class="slide-tag">Textbooks & Notes</span>
+              <h2>Semester Textbook Hub</h2>
+              <p>Exchange textbooks, notes, and lab material directly inside your hostel. 0% commission, 100% peer trust.</p>
+              <button class="btn btn-primary start-browsing-btn">Browse Books</button>
+            </div>
+          </div>
+
+          <!-- Slide 2: Rent -->
+          <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1505740420928-5e560c06d30e?q=80&w=1470&auto=format&fit=crop');">
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+              <span class="slide-tag">Rent / Share</span>
+              <h2>Premium Gear on Rent</h2>
+              <p>Need a scientific calculator, DSLR, or lab coat for a semester? Rent it from seniors at unbeatable daily prices.</p>
+              <button class="btn btn-primary start-browsing-btn">Explore Rentals</button>
+            </div>
+          </div>
+
+          <!-- Slide 3: Donate -->
+          <div class="carousel-slide" style="background-image: url('https://images.unsplash.com/photo-1532629345422-7515f3d16bb6?q=80&w=1470&auto=format&fit=crop');">
+            <div class="slide-overlay"></div>
+            <div class="slide-content">
+              <span class="slide-tag">Exchanges & Donations</span>
+              <h2>Hostel Cleans & Donations</h2>
+              <p>Graduating soon? Pass on your cycles, mattress, lamps, and notes to juniors. Keep the campus waste-free.</p>
+              <button class="btn btn-primary start-browsing-btn">View Donations</button>
+            </div>
+          </div>
+
+          <!-- Carousel Nav Buttons -->
+          <button class="carousel-btn carousel-btn-prev" id="carousel-prev-btn"><i class="fa-solid fa-chevron-left"></i></button>
+          <button class="carousel-btn carousel-btn-next" id="carousel-next-btn"><i class="fa-solid fa-chevron-right"></i></button>
+          
+          <!-- Indicators -->
+          <div class="carousel-indicators" id="carousel-indicators-container">
+            <div class="carousel-dot active" data-slide="0"></div>
+            <div class="carousel-dot" data-slide="1"></div>
+            <div class="carousel-dot" data-slide="2"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Categories Roundels (AJIO circular category browser) -->
+      <div class="categories-showcase">
+        <div class="section-title-wrapper">
+          <h2 class="section-title">Explore Categories</h2>
+        </div>
+        <div class="category-roundels" id="category-roundels-container">
+          <div class="category-roundel active" data-category="all">
+            <div class="roundel-image"><i class="fa-solid fa-border-all"></i></div>
+            <span class="roundel-label">All Items</span>
+          </div>
+          <div class="category-roundel" data-category="Books & Notes">
+            <div class="roundel-image"><i class="fa-solid fa-book"></i></div>
+            <span class="roundel-label">Books & Notes</span>
+          </div>
+          <div class="category-roundel" data-category="Electronics">
+            <div class="roundel-image"><i class="fa-solid fa-laptop"></i></div>
+            <span class="roundel-label">Electronics</span>
+          </div>
+          <div class="category-roundel" data-category="Cycles">
+            <div class="roundel-image"><i class="fa-solid fa-bicycle"></i></div>
+            <span class="roundel-label">Cycles</span>
+          </div>
+          <div class="category-roundel" data-category="Calculators">
+            <div class="roundel-image"><i class="fa-solid fa-calculator"></i></div>
+            <span class="roundel-label">Calculators</span>
+          </div>
+          <div class="category-roundel" data-category="Lab Equipment">
+            <div class="roundel-image"><i class="fa-solid fa-flask"></i></div>
+            <span class="roundel-label">Lab Equipment</span>
+          </div>
+          <div class="category-roundel" data-category="Hostel Essentials">
+            <div class="roundel-image"><i class="fa-solid fa-bed"></i></div>
+            <span class="roundel-label">Hostel Essentials</span>
+          </div>
+          <div class="category-roundel" data-category="Sports Equipment">
+            <div class="roundel-image"><i class="fa-solid fa-volleyball"></i></div>
+            <span class="roundel-label">Sports Gear</span>
+          </div>
+          <div class="category-roundel" data-category="Miscellaneous">
+            <div class="roundel-image"><i class="fa-solid fa-circle-ellipsis"></i></div>
+            <span class="roundel-label">Misc</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Marketplace Listings Grid Layout -->
+      <div class="marketplace-container">
+        
+        <!-- Filters Sidebar -->
+        <aside class="filters-sidebar">
+          
+          <!-- Filter by Transaction Type -->
+          <div class="filter-section">
+            <h4>Transaction Type</h4>
+            <div class="filter-group" id="filter-transaction-type">
+              <label class="filter-label">
+                <input type="checkbox" value="Sell" checked> Sell
+              </label>
+              <label class="filter-label">
+                <input type="checkbox" value="Rent" checked> Rent
+              </label>
+              <label class="filter-label">
+                <input type="checkbox" value="Exchange" checked> Exchange
+              </label>
+              <label class="filter-label">
+                <input type="checkbox" value="Donate" checked> Donate
+              </label>
+            </div>
+          </div>
+
+          <!-- Filter by Item Status -->
+          <div class="filter-section">
+            <h4>Availability Status</h4>
+            <div class="filter-group" id="filter-availability">
+              <label class="filter-label">
+                <input type="checkbox" value="Available" checked> Available
+              </label>
+              <label class="filter-label">
+                <input type="checkbox" value="Sold"> Sold
+              </label>
+              <label class="filter-label">
+                <input type="checkbox" value="Rented"> Rented
+              </label>
+              <label class="filter-label">
+                <input type="checkbox" value="Exchanged"> Exchanged
+              </label>
+              <label class="filter-label">
+                <input type="checkbox" value="Donated"> Donated
+              </label>
+            </div>
+          </div>
+
+          <!-- Price Range Filter -->
+          <div class="filter-section">
+            <h4>Price Range</h4>
+            <div class="price-range-inputs">
+              <input type="number" id="price-min" placeholder="Min" min="0">
+              <span>-</span>
+              <input type="number" id="price-max" placeholder="Max" min="0">
+            </div>
+          </div>
+
+          <!-- Hostel Location Filter -->
+          <div class="filter-section">
+            <h4>Hostel/Location</h4>
+            <div class="form-group" style="margin-bottom: 0;">
+              <select id="filter-hostel" style="padding: 0.5rem; border-radius: var(--border-radius-sm); font-size: 0.85rem;">
+                <option value="all">All Locations</option>
+                <option value="Hostel A">Hostel A</option>
+                <option value="Hostel B">Hostel B</option>
+                <option value="Hostel C">Hostel C</option>
+                <option value="Hostel D">Hostel D</option>
+                <option value="Hostel E">Hostel E</option>
+                <option value="PG / Off-Campus">PG / Off-Campus</option>
+              </select>
+            </div>
+          </div>
+
+          <button class="btn btn-clear-filters" id="btn-reset-filters"><i class="fa-solid fa-rotate-left"></i> Reset Filters</button>
+        </aside>
+
+        <!-- Product Grid Content -->
+        <div class="products-layout">
+          <div class="grid-header">
+            <div class="results-count" id="listings-count-label">Showing 0 listings</div>
+            <div class="grid-sorting">
+              <select id="listings-sort-select">
+                <option value="recent">Recently Added</option>
+                <option value="price-low">Price: Low to High</option>
+                <option value="price-high">Price: High to Low</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="products-grid" id="listings-grid">
+            <!-- Product Cards will be injected dynamically here -->
+            <div class="empty-state">
+              <i class="fa-solid fa-spinner fa-spin"></i>
+              <h3>Loading listings...</h3>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==============================================
+         2. USER DASHBOARD VIEW
+         ============================================== -->
+    <section id="view-dashboard" style="display: none;">
+      <div class="dashboard-container">
+        
+        <!-- Dashboard Navigation Menu -->
+        <aside class="dashboard-sidebar">
+          <div class="profile-card">
+            <div class="avatar avatar-large" id="dash-user-avatar">U</div>
+            <div class="profile-info">
+              <h3 id="dash-user-name">User Name</h3>
+              <p id="dash-user-email">email@campus.edu</p>
+              <p id="dash-user-hostel"><i class="fa-solid fa-location-dot"></i> Hostel A</p>
+            </div>
+          </div>
+
+          <div class="dashboard-menu">
+            <div class="dashboard-menu-item active" id="dash-menu-listings"><i class="fa-solid fa-list-check"></i> My Listings</div>
+            <div class="dashboard-menu-item" id="dash-menu-inbox" style="position: relative;"><i class="fa-solid fa-comments"></i> Inbox <span class="sidebar-unread-badge" id="dash-inbox-badge" style="display: none;">0</span></div>
+            <div class="dashboard-menu-item" id="dash-menu-sell"><i class="fa-solid fa-circle-plus"></i> Add New Item</div>
+            <div class="dashboard-menu-item" id="dash-menu-logout" style="color: #ef4444;"><i class="fa-solid fa-right-from-bracket"></i> Log Out</div>
+          </div>
+        </aside>
+
+        <!-- Dashboard Content Details -->
+        <div class="dashboard-content-layout">
+          
+          <!-- Summary statistics -->
+          <div class="dashboard-stats-grid">
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fa-solid fa-box-open"></i></div>
+              <div class="stat-details">
+                <span class="stat-value" id="stat-total">0</span>
+                <span class="stat-label">Total Listings</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="color: var(--color-available); background-color: #e6fcf5;"><i class="fa-solid fa-circle-check"></i></div>
+              <div class="stat-details">
+                <span class="stat-value" id="stat-active">0</span>
+                <span class="stat-label">Active Listings</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="color: var(--color-sold); background-color: #fff5f5;"><i class="fa-solid fa-handshake"></i></div>
+              <div class="stat-details">
+                <span class="stat-value" id="stat-sold-rented">0</span>
+                <span class="stat-label">Sold/Rented</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon" style="color: var(--color-donate); background-color: #fffbeb;"><i class="fa-solid fa-gift"></i></div>
+              <div class="stat-details">
+                <span class="stat-value" id="stat-donations">0</span>
+                <span class="stat-label">Donations Passed</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Manage My Listings -->
+          <div class="dashboard-section" id="dash-listings-section">
+            <div class="dashboard-section-header">
+              <h2 class="dashboard-section-title">My Marketplace Listings</h2>
+              <button class="btn btn-primary" id="dash-btn-add-item"><i class="fa-solid fa-plus"></i> Create Listing</button>
+            </div>
+
+            <div class="my-listings-list" id="my-listings-container">
+              <!-- User listings injected dynamically -->
+              <div class="empty-state">
+                <i class="fa-solid fa-tags"></i>
+                <h3>No listings created yet</h3>
+                <p>You haven't listed any items for selling, renting, or donation yet.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section: Inbox Messages -->
+          <div class="dashboard-section" id="dash-inbox-section" style="display: none;">
+            <div class="dashboard-section-header">
+              <h2 class="dashboard-section-title">Inbox Messages</h2>
+            </div>
+            
+            <div class="inbox-layout">
+              <!-- Left Panel: Chat List -->
+              <div class="inbox-chat-list" id="inbox-chats-container">
+                <!-- Conversations injected dynamically -->
+              </div>
+              
+              <!-- Right Panel: Active Chat Thread -->
+              <div class="inbox-chat-thread" id="inbox-thread-container">
+                <div class="chat-thread-placeholder">
+                  <i class="fa-solid fa-comments" style="font-size: 3rem; color: var(--text-muted); margin-bottom: 1rem;"></i>
+                  <p>Select a conversation from the list to start chatting about an item.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==============================================
+       SYSTEM MODALS & DIALOGS
+       ============================================== -->
+
+  <!-- AUTHENTICATION DIALOG (Login / Register Tabs) -->
+  <div class="modal-overlay" id="auth-modal">
+    <div class="modal-container">
+      <button class="modal-close auth-modal-close-btn">&times;</button>
+      
+      <div class="modal-header">
+        <h2 class="modal-title" id="auth-modal-title">Sign In</h2>
+        <div style="display: flex; gap: 1rem; border-bottom: 2px solid #f1f5f9; margin-top: 1rem; padding-bottom: 0.5rem;">
+          <span id="tab-login" style="font-weight: 700; color: var(--bg-dark); border-bottom: 2px solid var(--bg-dark); padding-bottom: 0.5rem; cursor: pointer; flex: 1; text-align: center;">LOG IN</span>
+          <span id="tab-register" style="font-weight: 600; color: var(--text-secondary); padding-bottom: 0.5rem; cursor: pointer; flex: 1; text-align: center;">REGISTER</span>
+        </div>
+      </div>
+
+      <div class="modal-body">
+        
+        <!-- Login Form -->
+        <form id="login-form">
+          <div class="form-group">
+            <label for="login-email">Email Address</label>
+            <input type="email" id="login-email" required placeholder="name@campus.edu">
+          </div>
+          <div class="form-group">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+              <label for="login-password" style="margin-bottom: 0;">Password</label>
+              <span id="login-forgot-link" style="font-size: 0.8rem; color: var(--primary-color); cursor: pointer; font-weight: 600;">Forgot Password?</span>
+            </div>
+            <input type="password" id="login-password" required placeholder="••••••••">
+          </div>
+          <button type="submit" class="btn btn-primary form-submit-btn">Continue</button>
+        </form>
+
+        <!-- Registration Form (Hidden initially) -->
+        <form id="register-form" style="display: none;">
+          <div class="form-group">
+            <label for="register-name">Full Name</label>
+            <input type="text" id="register-name" required placeholder="John Doe">
+          </div>
+          <div class="form-group">
+            <label for="register-email">Campus Email</label>
+            <input type="email" id="register-email" required placeholder="yourname@college.edu">
+          </div>
+          <div class="form-group">
+            <label for="register-hostel">Hostel/Location</label>
+            <select id="register-hostel" required>
+              <option value="" disabled selected>Select Hostel</option>
+              <option value="Hostel A">Hostel A</option>
+              <option value="Hostel B">Hostel B</option>
+              <option value="Hostel C">Hostel C</option>
+              <option value="Hostel D">Hostel D</option>
+              <option value="Hostel E">Hostel E</option>
+              <option value="PG / Off-Campus">PG / Off-Campus</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="register-password">Create Password</label>
+            <input type="password" id="register-password" required placeholder="••••••••">
+          </div>
+          <button type="submit" class="btn btn-primary form-submit-btn">Create Account</button>
+        </form>
+
+        <!-- Forgot Password: Request OTP Form (Hidden initially) -->
+        <form id="forgot-form" style="display: none;">
+          <div class="form-group">
+            <label for="forgot-email">Enter Campus Email</label>
+            <input type="email" id="forgot-email" required placeholder="yourname@college.edu">
+          </div>
+          <button type="submit" class="btn btn-primary form-submit-btn">Send Reset Code</button>
+        </form>
+
+        <!-- Forgot Password: Verify & Reset Password Form (Hidden initially) -->
+        <form id="reset-form" style="display: none;">
+          <div style="background-color: #f1f5f9; padding: 0.75rem; border-radius: var(--border-radius-md); font-size: 0.82rem; margin-bottom: 1rem; color: var(--text-secondary);">
+            <i class="fa-solid fa-circle-info"></i> Enter the 6-digit verification code sent to your email and select your new password.
+          </div>
+          <div class="form-group">
+            <label for="reset-otp">6-Digit Code (OTP)</label>
+            <input type="text" id="reset-otp" required placeholder="123456" maxlength="6" pattern="\\d{6}" style="letter-spacing: 3px; font-weight: bold; text-align: center;">
+          </div>
+          <div class="form-group">
+            <label for="reset-new-password">Choose New Password</label>
+            <input type="password" id="reset-new-password" required placeholder="••••••••">
+          </div>
+          <button type="submit" class="btn btn-primary form-submit-btn">Reset Password</button>
+        </form>
+
+        <!-- Registration: Verify Email OTP Form (Hidden initially) -->
+        <form id="verify-email-form" style="display: none;">
+          <div style="background-color: #e6fcf5; padding: 0.75rem; border-radius: var(--border-radius-md); font-size: 0.82rem; margin-bottom: 1rem; color: #0ca678;">
+            <i class="fa-solid fa-circle-info"></i> A 6-digit verification code has been sent to your email. Enter the code to activate your account.
+          </div>
+          <div class="form-group">
+            <label for="verify-email-otp">6-Digit Code (OTP)</label>
+            <input type="text" id="verify-email-otp" required placeholder="123456" maxlength="6" pattern="\\d{6}" style="letter-spacing: 3px; font-weight: bold; text-align: center;">
+          </div>
+          <button type="submit" class="btn btn-primary form-submit-btn">Verify & Activate</button>
+        </form>
+
+        <div class="modal-footer-link" id="auth-switch-prompt">
+          Don't have an account? <span id="auth-switch-btn">Register</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CREATE / EDIT LISTING MODAL -->
+  <div class="modal-overlay" id="listing-form-modal">
+    <div class="modal-container">
+      <button class="modal-close" id="listing-form-close-btn">&times;</button>
+      
+      <div class="modal-header">
+        <h2 class="modal-title" id="listing-form-title">List an Item</h2>
+      </div>
+
+      <div class="modal-body">
+        <form id="listing-form">
+          <input type="hidden" id="listing-edit-id">
+          
+          <div class="form-group">
+            <label for="listing-title">Item Title</label>
+            <input type="text" id="listing-title" required placeholder="e.g. HC Verma Physics Vol 1, Shimano Road Bicycle">
+          </div>
+
+          <div class="form-group">
+            <label for="listing-category">Category</label>
+            <select id="listing-category" required>
+              <option value="" disabled selected>Select Category</option>
+              <option value="Books & Notes">Books & Notes</option>
+              <option value="Electronics">Electronics</option>
+              <option value="Cycles">Cycles</option>
+              <option value="Calculators">Calculators</option>
+              <option value="Lab Equipment">Lab Equipment</option>
+              <option value="Hostel Essentials">Hostel Essentials</option>
+              <option value="Sports Equipment">Sports Equipment</option>
+              <option value="Miscellaneous">Miscellaneous</option>
+            </select>
+          </div>
+
+          <div class="form-group" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+            <div>
+              <label for="listing-type">Transaction Type</label>
+              <select id="listing-type" required>
+                <option value="Sell">Sell</option>
+                <option value="Rent">Rent</option>
+                <option value="Exchange">Exchange</option>
+                <option value="Donate">Donate</option>
+              </select>
+            </div>
+            <div>
+              <label for="listing-price">Price (₹)</label>
+              <input type="number" id="listing-price" required min="0" placeholder="0 for Free/Donate">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="listing-hostel">Hostel/Location</label>
+            <select id="listing-hostel" required>
+              <option value="" disabled selected>Select Item Location</option>
+              <option value="Hostel A">Hostel A</option>
+              <option value="Hostel B">Hostel B</option>
+              <option value="Hostel C">Hostel C</option>
+              <option value="Hostel D">Hostel D</option>
+              <option value="Hostel E">Hostel E</option>
+              <option value="PG / Off-Campus">PG / Off-Campus</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="listing-desc">Description</label>
+            <textarea id="listing-desc" required placeholder="Mention item condition, age, usage terms, or rental duration detail..."></textarea>
+          </div>
+
+          <div class="form-group">
+            <label>Item Image</label>
+            <div class="file-upload-wrapper">
+              <div class="file-upload-btn" id="upload-btn-ui">
+                <i class="fa-solid fa-cloud-arrow-up" style="font-size: 1.5rem;"></i>
+                <span>Choose Image or Drag & Drop</span>
+                <span style="font-size: 0.75rem; font-weight: normal; color: var(--text-muted);">Max size: 5MB (PNG, JPG, WEBP)</span>
+              </div>
+              <input type="file" id="listing-image-file" accept="image/*">
+            </div>
+            <input type="hidden" id="listing-image-url">
+            
+            <div class="upload-preview-container" id="upload-preview-box">
+              <img src="" alt="Upload Preview" class="upload-preview" id="upload-preview-img">
+              <button type="button" class="upload-preview-remove" id="upload-preview-remove-btn">&times;</button>
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary form-submit-btn" id="listing-form-submit-btn">Submit Listing</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRODUCT DETAILS DIALOG (AJIO Dual Column View) -->
+  <div class="modal-overlay" id="product-detail-modal">
+    <div class="modal-container modal-container-large">
+      <button class="modal-close" id="product-detail-close-btn">&times;</button>
+      
+      <div class="modal-body" style="padding-top: 3rem;">
+        <div class="detail-layout">
+          
+          <!-- Image Section -->
+          <div class="detail-image-box">
+            <img src="/placeholder.png" alt="Product Image" id="detail-image">
+          </div>
+
+          <!-- Product Specifications & Owner Info -->
+          <div class="detail-info-box">
+            <div class="detail-meta">
+              <span class="badge" id="detail-badge-type">FOR SALE</span>
+              <span class="badge" style="position: relative; top: 0; left: 0; right: 0;" id="detail-badge-status">AVAILABLE</span>
+            </div>
+
+            <h1 class="detail-title" id="detail-title">Item Title Here</h1>
+            <p style="font-size: 0.85rem; font-weight: 700; color: var(--text-muted); text-transform: uppercase;" id="detail-category">Category</p>
+            
+            <div class="detail-price-row">
+              <span class="detail-price-label">Price:</span>
+              <span class="detail-price" id="detail-price">₹0</span>
+            </div>
+
+            <div class="detail-desc-box">
+              <h4 class="detail-desc-title">Description</h4>
+              <p class="detail-desc" id="detail-description">
+                Details about the item go here.
+              </p>
+            </div>
+
+            <div class="detail-desc-box" style="border-top: none; padding-top: 0;">
+              <span style="font-size: 0.8rem; color: var(--text-secondary);"><i class="fa-solid fa-clock"></i> Posted: <span id="detail-date">Recently</span></span>
+            </div>
+
+            <!-- Seller Profile Widget -->
+            <div class="seller-info-card">
+              <span class="seller-header">Seller Details</span>
+              <div class="seller-detail-row">
+                <div class="seller-avatar" id="detail-seller-avatar">S</div>
+                <div class="seller-name-box">
+                  <span class="seller-name" id="detail-seller-name">Seller Name</span>
+                  <span class="seller-hostel" id="detail-seller-hostel"><i class="fa-solid fa-location-dot"></i> Hostel A</span>
+                </div>
+              </div>
+              <div style="margin-top: 0.5rem;">
+                <button class="btn btn-primary seller-contact-btn" id="detail-seller-chat-btn" style="width: 100%; padding: 0.65rem 0.5rem;">
+                  <i class="fa-solid fa-comments"></i> Message Seller
+                </button>
+              </div>
+            </div>
+
+            <!-- Ownership Management Panel (Visible only to Listing Owner) -->
+            <div class="listing-owner-actions" id="detail-owner-actions" style="display: none;">
+              <!-- Quick status switcher -->
+              <select class="btn btn-status-dropdown" id="detail-owner-status-select">
+                <option value="Available">Available</option>
+                <option value="Sold">Mark as Sold</option>
+                <option value="Rented">Mark as Rented</option>
+                <option value="Exchanged">Mark as Exchanged</option>
+                <option value="Donated">Mark as Donated</option>
+              </select>
+              
+              <button class="btn btn-outline" id="detail-owner-edit-btn"><i class="fa-solid fa-pen-to-square"></i> Edit</button>
+              <button class="btn btn-outline" style="border-color: #ef4444; color: #ef4444;" id="detail-owner-delete-btn"><i class="fa-solid fa-trash"></i> Delete</button>
+            </div>
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOATING QUICK CHAT OVERLAY -->
+  <div class="floating-chat-box" id="quick-chat-box" style="display: none;">
+    <div class="chat-box-header">
+      <div class="chat-box-title-info">
+        <span class="chat-box-user" id="quick-chat-user">Seller Name</span>
+        <span class="chat-box-item" id="quick-chat-item">Item Title</span>
+      </div>
+      <button class="chat-box-close" id="quick-chat-close-btn">&times;</button>
+    </div>
+    <div class="chat-box-body" id="quick-chat-messages-container">
+      <!-- Chat bubbles go here -->
+    </div>
+    <form class="chat-box-footer" id="quick-chat-form">
+      <input type="text" id="quick-chat-input" placeholder="Type a message..." required autocomplete="off">
+      <button type="submit" class="btn btn-primary"><i class="fa-solid fa-paper-plane"></i></button>
+    </form>
+  </div>
+
+  <!-- TOAST NOTIFICATION CONTAINER -->
+  <div class="toast-container" id="toast-container">
+    <!-- Toasts are generated dynamically -->
+  </div>
+
+  <!-- Socket.IO Client -->
+  <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script>
+  <!-- Application Controller -->
+  <script src="/js/app.js"></script>
+</body>
+</html>
